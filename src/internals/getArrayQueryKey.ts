@@ -12,10 +12,13 @@ export type QueryKey = [
  * formats.
  **/
 export function getArrayQueryKey(
+	prefix: string[],
 	path: string[],
 	input: unknown,
 	type: QueryType,
 ): QueryKey {
+	path = [...prefix, ...path];
+
 	// Construct a query key that is easy to destructure and flexible for
 	// partial selecting etc.
 	// https://github.com/trpc/trpc/issues/3128

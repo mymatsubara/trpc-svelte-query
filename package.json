@@ -1,6 +1,6 @@
 {
-	"name": "trpc-svelte-query",
-	"version": "1.0.3",
+	"name": "@mymatsubara/trpc-svelte-query",
+	"version": "1.0.7",
 	"description": "tRPC Svelte lib",
 	"author": "Ottomated",
 	"license": "MIT",
@@ -19,7 +19,7 @@
 	"homepage": "https://trpc.io",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ottomated/trpc-svelte-query.git"
+		"url": "git+https://github.com/mymatsubara/trpc-svelte-query.git"
 	},
 	"scripts": {
 		"build": "tsup",

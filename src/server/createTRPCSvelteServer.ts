@@ -78,6 +78,7 @@ export type CreateTRPCSvelteServerOptions<TRouter extends AnyRouter> =
 	HTTPBaseHandlerOptions<TRouter, Request> &
 		SvelteCreateContextOption<TRouter> & {
 			endpoint: string;
+			keyPrefix?: () => string[];
 		};
 
 const clientMethods = {
@@ -119,7 +120,8 @@ function createInternalProxy<TRouter extends AnyRouter>(
 				return options.createContext?.(event);
 			};
 
-			const key = getArrayQueryKey(path, rawInput, procedureType);
+			const prefix = options.keyPrefix?.() ?? [];
+			const key = getArrayQueryKey(prefix, path, rawInput, procedureType);
 
 			return createContext()
 				.then((ctx) =>

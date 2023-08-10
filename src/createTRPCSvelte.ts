@@ -188,6 +188,7 @@ function createSvelteInternalProxy<TRouter extends AnyRouter>(
 						path,
 						method as any,
 						unknownArgs,
+						opts,
 					);
 				}
 				throw new TypeError(`trpc.${joinedPath}.${method} is not a function`);
@@ -199,7 +200,9 @@ function createSvelteInternalProxy<TRouter extends AnyRouter>(
 			const [trpcOptions, tanstackQueryOptions] = splitUserOptions(options);
 
 			// Create the query key - input is undefined for mutations
+			const prefix = opts.keyPrefix?.() ?? [];
 			const key = getArrayQueryKey(
+				prefix,
 				path,
 				method === 'mutation' ? undefined : args[0],
 				queryType,
@@ -243,9 +246,10 @@ function createSvelteInternalProxy<TRouter extends AnyRouter>(
 /**
  * @internal
  */
-type CreateTRPCSvelteOptions<TRouter extends AnyRouter> =
+export type CreateTRPCSvelteOptions<TRouter extends AnyRouter> =
 	CreateTRPCClientOptions<TRouter> & {
 		queryClientConfig?: QueryClientConfig;
+		keyPrefix?: () => string[];
 	};
 
 export function createTRPCSvelte<TRouter extends AnyRouter>(

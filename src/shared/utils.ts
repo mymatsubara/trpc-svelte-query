@@ -27,7 +27,10 @@ import {
 } from '@trpc/server';
 import { inferTransformedProcedureOutput } from '@trpc/server/shared';
 import { BROWSER } from 'esm-env';
-import { UserExposedOptions } from '../createTRPCSvelte';
+import {
+	CreateTRPCSvelteOptions,
+	UserExposedOptions,
+} from '../createTRPCSvelte';
 import { QueryType, getArrayQueryKey } from '../internals/getArrayQueryKey';
 import { splitUserOptions } from '../utils/splitUserOptions';
 
@@ -182,6 +185,7 @@ export function callUtilMethod<TRouter extends AnyRouter>(
 	path: string[],
 	method: ContextMethod,
 	args: any[],
+	options: CreateTRPCSvelteOptions<TRouter>,
 ): unknown {
 	// If we're not in the browser, we need to use the queryClient from the context,
 	// which will fail unless called during component initialization
@@ -191,7 +195,8 @@ export function callUtilMethod<TRouter extends AnyRouter>(
 	}
 
 	const queryType = queryTypes[method];
-	const queryKey = getArrayQueryKey(path, args[0], queryType);
+	const prefix = options.keyPrefix?.() ?? [];
+	const queryKey = getArrayQueryKey(prefix, path, args[0], queryType);
 
 	switch (method) {
 		case 'prefetch':
@@ -222,7 +227,7 @@ export function callUtilMethod<TRouter extends AnyRouter>(
 			return client.invalidateQueries(queryKey, args[1], args[2]);
 		case 'refetch':
 			return client.refetchQueries(
-				getArrayQueryKey(path, args[0], 'query'),
+				getArrayQueryKey(prefix, path, args[0], 'query'),
 				args[1],
 				args[2],
 			);
